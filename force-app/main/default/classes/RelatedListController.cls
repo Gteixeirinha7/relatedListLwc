@@ -1,4 +1,5 @@
 public with sharing class RelatedListController {
+    public static final String FILTER_PARAM = 'filter';
     public static final String FIELDS_PARAM = 'fields';
     public static final String NUMBER_OF_RECORDS_PARAM = 'numberOfRecords';
     public static final String RECORD_ID_PARAM = 'recordId';
@@ -12,6 +13,16 @@ public with sharing class RelatedListController {
     public static final String RECORDS_PARAM = 'records';
     public static final String ICON_NAME_PARAM = 'iconName';
 
+    @AuraEnabled
+    public static sObject getBaseData(String jsonData){
+		Map<String, Object> root = (Map<String, Object>)JSON.deserializeUntyped(jsonData);  
+        String fields = (String)root.get(FIELDS_PARAM);
+        String recordId = (String)root.get(RECORD_ID_PARAM);
+		String relatedFieldApiName = (String)root.get(RELATED_FIELD_API_NAME_PARAM);
+		String sobjectApiName = (String)root.get(SOBJECT_API_NAME_PARAM);           
+        String query = 'Select '+fields+' From '+sobjectApiName+' WHERE ' +relatedFieldApiName+ '= :recordId Limit 1';
+        return Database.query(String.escapeSingleQuotes(query))[0];
+    }
     @AuraEnabled
     public static String initData(String jsonData){
         system.debug(jsonData);
@@ -42,8 +53,11 @@ public with sharing class RelatedListController {
 		String sobjectApiName = (String)root.get(SOBJECT_API_NAME_PARAM);        
 		String orderBy = (String)root.get(SORTED_BY_PARAM) + ' ' + (String)root.get(SORTED_DIRECTION_PARAM);        
         
-        String query = 'Select '+fields+' From '+sobjectApiName+' WHERE ' +relatedFieldApiName+ '= :recordId ORDER BY ' +orderBy+' Limit :numberOfRecords';
-        return Database.query(String.escapeSingleQuotes(query));
+        String query = 'Select '+fields+' From '+sobjectApiName+' WHERE ' +relatedFieldApiName+ '= :recordId  '+(String)root.get(FILTER_PARAM)+' ORDER BY ' +orderBy+' Limit :numberOfRecords';
+        System.debug(query);
+        System.debug(recordId);
+        System.debug(numberOfRecords);
+        return Database.query(query);
 	}
         
     private static String getParentRelationshipName(Id recordId, String childSobjectApiName, String relatedFieldApiName){

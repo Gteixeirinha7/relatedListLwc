@@ -1,14 +1,5 @@
 <template>
     <template if:true={state.showRelatedList}>
-        <c-related-list-new-edit-popup 
-            onrefreshdata={handleRefreshData}>
-
-        </c-related-list-new-edit-popup>
-        <c-related-list-delete-popup
-            onrefreshdata={handleRefreshData}>
-
-        </c-related-list-delete-popup>
-
         <lightning-layout class="slds-m-top_x-small">
             <article class="slds-card lightning-card">
                 <div class="slds-card__header slds-grid slds-theme_shade">
@@ -22,19 +13,17 @@
                       </h2>
                     </div>
                     <div class="slds-no-flex">
-                        <lightning-button label="New" onclick={handleCreateRecord}></lightning-button>
                     </div>
                   </header>
                 </div>
                 <template if:true={hasRecords}>
                     <div>
                         <lightning-datatable class="related-list"
-                                            onrowaction={handleRowAction}
                                             columns={state.columns}
                                             data={state.records}
                                             key-field="Id"
-                                            hide-checkbox-column="true"
-                                            resize-column-disabled="true">
+                                            hide-default-actions="true"
+                                            hide-checkbox-column="true">
                         </lightning-datatable>   
                     </div>
                     <footer class="slds-card__footer">

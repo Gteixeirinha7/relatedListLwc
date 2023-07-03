@@ -30,17 +30,6 @@ export default class RelatedListHelper {
         return data
     }
 
-
-    initColumnsWithActions(columns, customActions) {
-        if (!customActions.length) {
-            customActions = [
-                { label: 'Edit', name: 'edit' },
-                { label: 'Delete', name: 'delete' }
-            ]
-        }
-        return [...columns, { type: 'action', typeAttributes: { rowActions: customActions } }]
-    }
-
     generateLinks(records) {
         records.forEach(record => {
             record.LinkName = '/' + record.Id
