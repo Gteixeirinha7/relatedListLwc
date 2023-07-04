@@ -1,0 +1,24 @@
+.c-container {
+    border: 1px solid #d8dde6;
+    margin: 10px 0 20px;
+    background: white;
+    border-radius: 5px;
+}
+
+.custom-box {
+    text-align: center;
+    background-color: #f4f6f9;
+    padding: 1rem;
+    border-radius: 7px;
+    border: 1px solid #d8dde6;
+}
+
+.numbers{
+    font-size: 20px;
+    font-weight: bold;
+}
+.iconClass{
+    position: absolute;
+    top: -70px;
+    left: -20px;
+}

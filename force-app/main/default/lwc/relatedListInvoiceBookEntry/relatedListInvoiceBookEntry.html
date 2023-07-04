@@ -1,0 +1,15 @@
+<template>  
+    <template if:true={showRelated}>  
+        <c-related-list 
+            record-id={recordIdProduct2}
+            filter={filter}
+            icon-name="standard:price_book_entries"
+            title="Juros Aplicado"
+            sobject-api-name="InvoicebookEntry__c"
+            related-field-api-name="Product2__c"
+            sorted-by="Juros__c"
+            fields="Family__c, Juros__c, FamilyName__c, Product2Name__c, Product2__c"
+            columns={columns}>
+        </c-related-list>
+    </template>
+</template>

@@ -1,5 +1,4 @@
 <template>
-    <template if:true={state.showRelatedList}>
         <lightning-layout class="slds-m-top_x-small">
             <article class="slds-card lightning-card">
                 <div class="slds-card__header slds-grid slds-theme_shade">
@@ -26,13 +25,10 @@
                                             hide-checkbox-column="true">
                         </lightning-datatable>   
                     </div>
-                    <footer class="slds-card__footer">
+                    <!-- <footer class="slds-card__footer">
                         <a onclick={handleGotoRelatedList}>View All</a>
-                    </footer>                            
+                    </footer>                             -->
                 </template>
               </article>                       
-        </lightning-layout>
-    </template>
-   
-                                    
+        </lightning-layout>                                    
 </template>

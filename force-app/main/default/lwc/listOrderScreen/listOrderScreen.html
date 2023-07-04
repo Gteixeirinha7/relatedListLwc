@@ -1,0 +1,400 @@
+<template>
+    <template if:true={showOrder}>
+		<lightning-layout class="container__body">
+			<lightning-layout-item class="container__filter" size="3">
+
+				<lightning-layout multiple-rows>
+					<lightning-layout-item size="12">
+						<lightning-input
+							name="orderNumber"
+							label="Número do pedido"
+							placeholder="Ex: 88564"
+							value={orderFilterData.orderNumber}
+							onchange={handlerFilters}>
+						</lightning-input>
+					</lightning-layout-item>
+
+					<lightning-layout-item size="12">
+						<lightning-combobox
+							name="origem"
+							label="Origem"
+							options={datePicklist}
+							value={orderFilterData.origem}
+							onchange={handlerFilters}>
+						</lightning-combobox>
+					</lightning-layout-item>
+
+					<lightning-layout-item size="12">
+						<lightning-combobox
+							name="destiny"
+							label="Destino"
+							options={datePicklist}
+							value={orderFilterData.destiny}
+							onchange={handlerFilters}>
+						</lightning-combobox>
+					</lightning-layout-item>
+
+					<lightning-layout-item size="12">
+						<lightning-input
+							name="createdDateFrom"
+							label="Data de"
+							type="date"
+							placeholder="dd/mm/yyyy"
+							value={orderFilterData.createdDateFrom}
+							onchange={handlerFilters}>
+						</lightning-input>
+					</lightning-layout-item>
+
+					<lightning-layout-item size="12">
+						<lightning-input
+							name="createdDateUntil"
+							label="Data até"
+							type="date"
+							placeholder="dd/mm/yyyy"
+							value={orderFilterData.createdDateUntil}
+							onchange={handlerFilters}>
+						</lightning-input>
+					</lightning-layout-item>
+
+					<lightning-layout-item size="12">
+						<p class="input__field-label">Status</p>
+
+						<lightning-layout multiple-rows>
+							<template for:each={statusPicklist} for:item="status" for:index="statusIndex">
+
+								<lightning-layout-item
+									key={status.value}
+									name="status"
+									data-id={status.value}
+									data-index={statusIndex}
+									class={status.class}
+									onclick={handlerFilters}
+									size="12">
+										{status.label}
+								</lightning-layout-item>
+
+							</template>
+						</lightning-layout>
+					</lightning-layout-item>
+
+					<lightning-layout-item style="display: flex; justify-content: end;" size="12">
+						<button class="slds-button slds-brand" onclick={handlerClearFilters}>
+							<a>Limpar filtros</a>
+						</button>
+					</lightning-layout-item>
+				</lightning-layout>
+
+			</lightning-layout-item>
+			<lightning-layout-item class="" size="9">
+    <div class="order-list-wrapper">
+        
+    <div class="section-title">
+        <h2>Meus Pedidos</h2>
+    </div>
+    <div class="content-layout">
+        <div class="blockquote-container">
+            <div class="row blockquote-wrapper">
+                <template for:each={defaultData} for:item='item'>
+                <blockquote key={item.name} class="order-card cart stage-success" onclick={showOrderChange}>
+                    <div class="progress" ></div>
+                    <div>
+                        <h2>
+                            #{item.name}
+                            <small>{item.deliveryDate}</small>
+                        </h2>
+                    </div>
+                    <div class="order-card-content">
+                        <div>
+                            <p class="status">{item.status}</p>
+                            <label>Valor total</label>
+                            <p class="price">{item.totalAmount}</p>
+                            <label>Certificado/ Autorização</label>
+                            <p>{item.authorizationNumber}</p>
+                            <label>Origem</label>
+                            <p>{item.distributionCenterName}</p>
+                            <label>Destino</label>
+                            <p>{item.siteName}</p>
+                        </div>
+                        <div >
+                            <h2 class="slds-nav-vertical__title" style="margin: 0px">Itens</h2>
+                            <ul class="products" aria-describedby="entity-header">
+                                <template for:each={item.Itens} for:item='p'>
+                                    <li key={p.name} class="slds-nav-vertical__item">
+                                        <a class="slds-nav-vertical__action">
+                                            <small>{p.quantity} {p.und}<span>{p.price}</span></small>
+                                            <p>{p.name}</p>
+                                        </a>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                        <!-- <div >
+                            <h2 class="slds-nav-vertical__title">Serviços</h2>
+                            <ul aria-describedby="entity-header">
+                                <template for:each={item.service} for:item='p'>
+                                <li key={p.name} class="slds-nav-vertical__item">
+                                    <a class="slds-nav-vertical__action">
+                                        <p>{p.name}</p>
+                                    </a>
+                                </li>
+                                </template>
+                            </ul>
+                        </div>
+                        <div>
+                            <h2 class="slds-nav-vertical__title">Tecnologia e Equipamentos</h2>
+                            <ul aria-describedby="entity-header">
+                                <template for:each={item.tech} for:item='p'>
+                                    <li key={p.name} class="slds-nav-vertical__item">
+                                        <a class="slds-nav-vertical__action">
+                                            <p>{p.name}</p>
+                                        </a>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div> -->
+                    </div>
+                    <div class="order-card-footer cart-footer">
+                        <a class="slds-button light" href="#/orders/{item.id}" style="color: #455560;">Ver detalhes do pedido</a>
+                    </div>
+                </blockquote>
+                </template>
+            </div>
+        </div>
+    </div>
+</div>
+			</lightning-layout-item>
+		</lightning-layout>
+</template>
+<template if:false={showOrder}>
+    <div class="cart-wrapper order-detail-wrapper">
+    <div class="page-title-wrapper cart-border-bottom">
+        <h2>Detalhes do pedido</h2>
+        <small>Veja todas as informações do seu pedido.</small>
+        <div class="back-link">
+            <a onclick={showOrderChange}>Voltar para Meus Pedidos</a>
+        </div>
+    </div>
+    <div class="cart-content order-content">
+        <div class="product-list">
+            <div class="cart-container">
+                <div class="order-review">
+                    <div class="header-container">
+                        <h2>
+                            SOLICITAÇÃO DE COMPRA
+                            <small class="status">{selectedOrder.status}.</small>
+                        </h2>
+                    </div>
+
+                    <div class="order-info-container separator-top">
+                        <div class="field-container">
+                            <small>Número da solicitação:</small>
+                            <strong>{selectedOrder.name}</strong>
+                        </div>
+                        <div class="field-container">
+                            <small>Data de entrega:</small>
+                            <strong>{selectedOrder.deliveryDate}</strong>
+                        </div>
+                        <div class="field-container">
+                            <small>Número pedido IHARA:</small>
+                            <strong>{selectedOrder.orderNumberSap}</strong>
+                        </div>
+                        <div class="field-container">
+                            <small>Número pedido de compra:</small>
+                            <strong>{selectedOrder.orderNumber}</strong>
+                        </div>
+                    </div>
+
+                    <div class="account-info-container separator-top">
+                        <div class="field-container">
+                            <small>Cliente:</small>
+                            <strong>{selectedOrder.accountName}</strong>
+                        </div>
+                        <div class="field-container">
+                            <small>Modalidade de venda:</small>
+                            <strong>{selectedOrder.salesName}</strong>
+                        </div>
+                        <div class="field-container">
+                            <small>CNPJ:</small>
+                            <strong>{selectedOrder.accountCnpj}</strong>
+                        </div>
+                        <div class="field-container">
+                            <small>Tipo de frete:</small>
+                            <strong>{selectedOrder.freightType}  -  {selectedOrder.incoterms2}</strong>
+                        </div>
+                        <div class="field-container">
+                            <small>Condição de pagamento:</small>
+                            <strong>{selectedOrder.paymentConditionName}</strong>
+                        </div>
+                        <div class="field-container">
+                            <small>Tipo de escolta:</small>
+                            <strong>{selectedOrder.escortType}</strong>
+                        </div>
+                        <div class="field-container">
+                            <small>Site de entrega:</small>
+                            <strong>{selectedOrder.siteName}</strong>
+                        </div>
+                        <div class="field-container">
+                            <small>Fornecimento de:</small>
+                            <strong>{selectedOrder.distributionCenterName}</strong>
+                        </div>
+                    </div>
+
+                    <div class="order-items-container">
+                        <table class="order-items">
+                            <tr>
+                                <td class="header-td border-left-radius">ITEM</td>
+                                <td class="header-td">MATERIAL</td>
+                                <td class="header-td" style="width: 180px !important;">DESCRIÇÃO</td>
+                                <td class="header-td">QTD.</td>
+                                <td class="header-td">UND. MED</td>
+                                <td class="header-td">R$ UNIT.</td>
+                                <td class="header-td"  style="width: 100px !important;">VALOR TOTAL ORIGINAL</td>
+                                <td class="header-td">VALOR TOTAL</td>
+                                <td class="header-td"  style="width: 120px !important;">VALOR TOTAL DE DESCONTO</td>
+                                <td class="header-td" >% DESCONTO</td>
+                                <td class="header-td">% IPI</td>
+                                <td class="header-td">VLR. UNIT+IPI</td>
+                                <td class="header-td border-right-radius">Nº ITEM PED. COMPRA</td>
+                            </tr>
+                            <template for:each={selectedOrder.itens} for:item="item">
+                                <tr key={item.key}>
+                                    <td class="value-td">{item.key}</td>
+                                    <td class="value-td">{item.code}</td>
+                                    <td class="value-td">{item.name}</td>
+                                    <td class="value-td">{item.quantity}</td>
+                                    <td class="value-td">{item.und}</td>
+                                    <td class="value-td">{item.quantity}</td>
+                                    <td class="value-td">{item.originalPrice}</td>
+                                    <td class="value-td">{item.price }</td>
+                                    <td class="value-td">{item.itemDiscount }</td>
+                                    <td class="value-td">{item.itemDiscountPercent}%</td>
+                                    <td class="value-td">{item.priceParams}</td>
+                                    <td class="value-td">{item.priceWithIpi}</td>
+                                    <td class="value-td">{item.itemNumber}</td>
+                                </tr>
+                            </template>
+                        </table>
+                    </div>
+
+
+                    <div class="section-separator separator-top">
+                        <h4>COMPOSIÇÃO DOS VALORES</h4>
+                    </div>
+
+                    <div class="price-container">
+                        <div>
+                            <!-- IMPOSTOS -->
+                            <table>
+                                <tr>
+                                    <td class="header-td border-left-radius">IMPOSTOS</td>
+                                    <td class="header-td">ALÍQUOTAS</td>
+                                    <td class="header-td border-right-radius">VLR IMPOSTOS</td>
+                                </tr>
+                                <tr>
+                                    <td class="value-td">ICMS</td>
+                                    <td class="value-td">{selectedOrder.taxIcmspercent}%</td>
+                                    <td class="value-td">{selectedOrder.taxIcmsvalue}</td>
+                                </tr>
+                                <tr>
+                                    <td class="value-td">PIS</td>
+                                    <td class="value-td">{selectedOrder.taxPispercent}%</td>
+                                    <td class="value-td">{selectedOrder.taxPisvalue}</td>
+                                </tr>
+                                <tr>
+                                    <td class="value-td">COFINS</td>
+                                    <td class="value-td">{selectedOrder.taxCofinspercent}%</td>
+                                    <td class="value-td">{selectedOrder.taxCofinsvalue}</td>
+                                </tr>
+                                <tr>
+                                    <td class="value-td">ISS</td>
+                                    <td class="value-td">{selectedOrder.taxIsspercent}%</td>
+                                    <td class="value-td">{selectedOrder.taxIssvalue}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <!-- TOTAIS -->
+                            <table>
+                                <tr>
+                                    <td class="header-td border-left-radius border-right-radius" colspan="2">TOTAIS DA SOLICITAÇÃO</td>
+                                </tr>
+                                <tr>
+                                    <td class="value-td">Produtos</td>
+                                    <td class="value-td">{selectedOrder.getTotalProduct}</td>
+                                </tr>
+                                <tr>
+                                    <td class="value-td">Frete</td>
+                                    <td class="value-td">{selectedOrder.getTotalFreigth}</td>
+                                </tr>
+                                <!-- <tr>
+                                    <td class="value-td">Escolta</td>
+                                    <td class="value-td">{selectedOrder.getTotalEscort}</td>
+                                </tr>
+                                <tr>
+                                    <td class="value-td">Serviço</td>
+                                    <td class="value-td">{selectedOrder.getTotalService}</td>
+                                </tr> -->
+                                <tr >
+                                    <td class="value-td">Descontos</td>
+                                    <td class="value-td">{selectedOrder.totalDiscount}</td>
+                                </tr> 
+                                <tr>
+                                    <td class="value-td">Peso Bruto</td>
+                                    <td class="value-td">{selectedOrder.getTotalWeight} KG</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="total-container section-separator separator-top separator-bottom">
+                        <h4>VALOR TOTAL</h4>
+                        <strong>{selectedOrder.getTotalPrice}</strong>
+                    </div>
+
+                    <div class="section-separator"></div>
+                    <div class="observations-container">
+                        <div class="observation-header">OBSERVAÇÕES ADICIONAIS</div>
+                        <div class="observation-value">
+                            <textarea disabled id="textarea-id-01-obs" class="slds-textarea" placeholder="Não informado">{selectedOrder.noteObs}</textarea>
+                        </div>
+
+                        <div class="observation-header">DADOS ADICIONAIS DA NOTA FISCAL</div>
+                        <div class="observation-value">
+                            <textarea disabled id="textarea-id-01" class="slds-textarea" placeholder="Não informado">{selectedOrder.note}</textarea>
+                        </div>         
+
+                        <div class="observation-header" >OBSERVAÇÕES PARA APROVAÇÃO</div>
+                        <div  class="observation-value">
+                            <textarea id="textarea-comentario-aprovacao" class="slds-textarea" placeholder="Utilize esse espaço para comentários na aprovação..."></textarea>
+                        </div>
+                    </div>
+                    <div class="section-separator separator-top">
+                        <h4 id="attatchments">DOCUMENTOS E ANEXOS</h4>
+                    </div>
+                    <div class="upload-container">
+                        <div class="upload-wrapper" >
+                            <a target="_blank" class="btn-upload" title={selectedOrder.docname}>
+                                <lightning-icon icon-name="utility:attach" > </lightning-icon>
+                                <p>{selectedOrder.docname}</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="cart-action">
+                    <!-- <div class="cart-action-collumn">
+                        <a class="slds-button light">Cancelar solicitação</a>
+                    </div> -->
+                    <div class="cart-action-collumn" >
+                        <button class="cart-button" >IMPRIMIR PDF</button>
+                    </div>
+                    <!-- <div class="cart-action-collumn" >
+                        <button class="cart-button" >SOLICITAÇÃO DE PREÇOS</button>
+                        <button class="cart-button" >FINALIZAR COMPRA</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</template>
+</template>

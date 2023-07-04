@@ -1,0 +1,15 @@
+<template>  
+    <template if:true={showRelated}>  
+        <c-related-list 
+            record-id={recordIdProduct2}
+            filter={filter}
+            icon-name="standard:contract_line_outcome_data"
+            title="Imposto Aplicado"
+            sobject-api-name="Taxes__c"
+            related-field-api-name="Product2__c"
+            sorted-by="Discount__c"
+            fields="Name, RegionName__c, Product2__c, ICMS__c, CompanyName__c, Company__c, Discount__c, ICMSFinal__c, DistributionCenter__c, DistributionCenterName__c"
+            columns={columns}>
+        </c-related-list>
+    </template>
+</template>

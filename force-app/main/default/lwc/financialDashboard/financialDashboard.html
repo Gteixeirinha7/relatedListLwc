@@ -1,0 +1,206 @@
+<template>
+    <div class="cart-wrapper panel-wrapper">
+    <div class="page-title-wrapper cart-border-bottom">
+        <h2>Painel financeiro</h2>
+        <small>Acompanhe suas faturas de um jeito fácil e prático.</small>
+    </div>
+    <div class="panel-card-wrapper">
+        <div class="panel-card-container">
+            <div class="panel-card">
+                <h3>
+                    <span>{defaultData.unpaidqtd}</span>
+                    <small>Faturas em aberto</small>
+                    <button  class="unpaid">Consultar</button>
+                </h3>
+                <span class="unpaid">{defaultData.unpaidprice}</span>
+            </div>
+            <div class="panel-card">
+                <h3>
+                    <span>{defaultData.expiredqtd}</span>
+                    <small>Faturas vencidas</small>
+                    <button class="expired">Consultar</button>
+                </h3>
+                <span class="expired">{defaultData.expiredprice}</span>
+            </div>
+            <!-- <div class="panel-card">
+                <h3>4 <small>Pedidos realizados</small></h3>
+                <span class="paid">1 em andamento</span>
+                <button ng-click="pageAction('orders')" class="paid">Ver todos</button>
+            </div> -->
+        </div>
+    </div>
+    <div class="panel-filter-wrapper">
+        <div class="panel-filter-container">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-medium-size_4-of-12 slds-small-size_12-of-12">
+                    <div class="slds-form-element" style="padding: 15px">
+                        <label class="slds-form-element__label" for="nfnumber">Número da nota fiscal</label>
+                        <div class="slds-form-element__control">
+                            <input style="border: 1px solid rgba(255,0,0,0.4);" type="number" id="nfnumber" placeholder="Ex: 14585" class="slds-input"  />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-medium-size_4-of-12 slds-small-size_6-of-12">
+                    <div class="slds-form-element" style="padding: 15px">
+                        <label class="slds-form-element__label" for="dateFrom">Vencimento de</label>
+                        <div class="slds-form-element__control">
+                            <input style="border: 1px solid rgba(255,0,0,0.4);" type="date" id="dateFrom" class="slds-input" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-medium-size_4-of-12 slds-small-size_6-of-12">
+                    <div class="slds-form-element" style="padding: 15px">
+                        <label class="slds-form-element__label" for="dateTo">Vencimento até</label>
+                        <div class="slds-form-element__control">
+                            <input style="border: 1px solid rgba(255,0,0,0.4);" type="date" id="dateTo" class="slds-input"  />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-medium-size_6-of-12 slds-small-size_12-of-12">
+                    <div class="slds-form-element" style="padding: 15px">
+                        <label class="slds-form-element__label" for="select-01">Origem</label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container">
+                                <select style="border: 1px solid rgba(255,0,0,0.4);" id="select-01" class="slds-select">
+                                    <option>Todas as Origens</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-medium-size_6-of-12 slds-small-size_12-of-12">
+                    <div class="slds-form-element" style="padding: 15px">
+                        <label class="slds-form-element__label" for="select-02">Status</label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container">
+                                <select style="border: 1px solid rgba(255,0,0,0.4);"  id="select-02" class="slds-select">
+                                    <option>Todas os Status</option>
+                                    <option>Compensado</option>
+                                    <option>Vencido</option>
+                                    <option>Atrasado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-medium-size_4-of-12 slds-small-size_12-of-12">
+                    <a href="">Redefinir filtro</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cart-content">
+        <div class="product-list">
+            <div class="cart-container">
+                <table class="table-panel">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Origem</th>
+                            <th>Solicitação de Compra</th>
+                            <th>Ordem de Venda</th>
+                            <th>Nota Fiscal</th>
+                            <th>Parcela</th>
+                            <th>Data de vencimento</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={defaultData.orders} for:item='order'>
+                            <tr key={order.key} onclick={changeModal}>
+                                <td><a href="">{order.name}</a></td>
+                                <td>{order.distributionCenter}</td>
+                                <td><a href="#/orders/{order.orderId}" target="_blank">{order.orderNumber}</a></td>
+                                <td><a href="#/orders/{order.orderId}" target="_blank">{order.orderNumberSap}</a></td>
+                                <td><a href="#/orders/{order.orderId}?tab=doc">{order.refNumber}</a></td>
+                                <td>{order.parcel}</td>
+                                <td>{order.dueDate}</td>
+                                <td>{order.value}</td>
+                                <td>{order.status}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+          <template if:true={defaultData.showModal}>
+        <div class="popup-bg-container">
+            <div class="popup-container">
+                <div class="popup-header">
+                    <div class="arrow-right">&nbsp;</div>
+                    <h2>Detalhes da Fatura</h2>
+                    <div>
+                        <h4>NÚMERO DA <br/> ORDERM DE VENDA</h4>
+                        <strong>{defaultData.selectedBill.orderNumberSap}</strong>
+                    </div>
+                </div>
+                <div class="popup-subheader">
+                    <h4>VALOR</h4>
+                    <strong>{defaultData.selectedBill.value}</strong>
+                    <small>{defaultData.selectedBill.status}</small>
+                </div>
+                <div class="fields-wrapper">
+                    <div class="field-item">
+                        <div class="field-item-label">
+                            <h4>NÚMERO DE REFERÊNCIA</h4>
+                        </div>
+                        <div class="field-item-value">
+                            <strong class="fix-color-default">{defaultData.selectedBill.refNumber}</strong>
+                        </div>
+                    </div>
+                    <div class="field-item">
+                        <div class="field-item-label">
+                            <h4>DATA DE VENCIMENTO</h4>
+                        </div>
+                        <div class="field-item-value">
+                            <strong class="fix-color-default">{defaultData.selectedBill.dueDate}</strong>
+                        </div>
+                    </div>
+                    <div class="field-item">
+                        <div class="field-item-label">
+                            <h4>DATA DE LANÇAMENTO</h4>
+                        </div>
+                        <div class="field-item-value">
+                            <strong class="fix-color-default">{defaultData.selectedBill.postDate}</strong>
+                        </div>
+                    </div>
+                    <div class="field-item">
+                        <div class="field-item-label">
+                            <h4>DOCUMENTO DO ESTORNO</h4>
+                        </div>
+                        <div class="field-item-value">
+                            <strong class="fix-color-default">{defaultData.selectedBill.documentoReverso}</strong>
+                        </div>
+                    </div>
+                    <div class="field-item">
+                        <div class="field-item-label">
+                            <h4>DATA DE COMPENSAÇÃO</h4>
+                        </div>
+                        <div class="field-item-value">
+                            <strong class="fix-color-default">{defaultData.selectedBill.compensationDate}</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-footer">
+                    <span>DATA FATURAMENTO: <b>{defaultData.selectedBill.docDate}</b></span>
+                    <span>LOCAL DE EXPEDIÇÃO: <b>{defaultData.selectedBill.distributionCenter}</b></span>
+                </div>
+                <div class="popup-footer-container">
+                    <h4>FORMA DE PAGAMENTO</h4>
+                    <p>{defaultData.selectedBill.paymentDescription}</p>
+                </div>
+                <div class="button-container">
+                    <button style="margin: 3px;" class="fix-bg-color-default" onclick={changeModal}>VOLTAR</button>
+                    <button style="margin: 3px;" class="fix-bg-color-default" >VISUALIZAR LIMITE DE CRÉDITO</button>
+                    <button style="margin: 3px;" class="fix-bg-color-default" onclick={createBoleto} >GERAR BOLETO</button>
+                </div>
+            </div>
+        </div>
+        </template>
+    </div>
+    </div>
+    
+</template>

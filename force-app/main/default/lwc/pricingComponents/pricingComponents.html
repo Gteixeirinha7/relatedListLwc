@@ -1,0 +1,21 @@
+<template>
+    <div class="c-container">
+        <lightning-layout horizontal-align="space">
+            <template for:each={components} for:item="cmps">
+            <lightning-layout-item key={cmps.title} padding="around-small" style="display: flex;">
+                <div class="custom-box"  style="position: relative">
+                    <lightning-layout multiple-rows  style="position: relative">
+                        <lightning-layout-item size="12">
+                            <lightning-formatted-number value={cmps.val} format-style={cmps.valType} class="numbers"></lightning-formatted-number>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12"> {cmps.title} </lightning-layout-item>
+                        <lightning-layout-item size="12" style="position: relative" >
+                            <lightning-icon icon-name={cmps.icon} size="small" class="iconClass"></lightning-icon>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </lightning-layout-item>
+            </template>
+        </lightning-layout>
+    </div>    
+</template>

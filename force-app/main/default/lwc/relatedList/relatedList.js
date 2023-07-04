@@ -1,6 +1,8 @@
 import { LightningElement, track, api } from "lwc";
 import { NavigationMixin } from "lightning/navigation";
 import RelatedListHelper from "./relatedListHelper";
+import { loadStyle } from "lightning/platformResourceLoader";
+import relatedListResource from "@salesforce/resourceUrl/relatedListResource";
 
 export default class RelatedList extends NavigationMixin(LightningElement) {
     @track state = {}
@@ -21,6 +23,9 @@ export default class RelatedList extends NavigationMixin(LightningElement) {
 
     get hasRecords() {
         return this.state.records != null && this.state.records.length;
+    }
+    renderedCallback() {
+        loadStyle(this, relatedListResource + '/relatedList.css')
     }
 
     async connectedCallback() {
@@ -50,6 +55,7 @@ export default class RelatedList extends NavigationMixin(LightningElement) {
         this.state.sobjectLabel = data.sobjectLabel;
         this.state.sobjectLabelPlural = data.sobjectLabelPlural;
         this.state.title = this.title ? this.title : data.title;
+        this.state.title += ` (${this.state.records.length})`;
         this.state.parentRelationshipApiName = data.parentRelationshipApiName;
         this.state.columns = this.columns;
     }
